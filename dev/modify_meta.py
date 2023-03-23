@@ -168,10 +168,13 @@ class ModifyMetaWindow(QWidget):
             data_item = QListWidgetItem(meta_data)
             data_item.setData(Qt.UserRole, meta_code)
             self.data_list.addItem(data_item)
+            return True
         except ValueError:
             QMessageBox.critical(self, '숫자가 아닌 Meta code', 'Meta code는 숫자만 입력 가능합니다.')
+            return False
         except Exception as e:
             print(f"add_code_data Exception: {e}")
+            return False
 
     def chk_code_clicked(self):
         try:
@@ -233,8 +236,8 @@ class ModifyMetaWindow(QWidget):
                     QMessageBox.warning(self, '중복된 Meta code', '이미 존재하는 Meta code입니다.')
                     return
                 if add_data_text and add_code_text:
-                    self.json_data[now_type][add_code_text] = add_data_text
-                    self.add_code_data(add_code_text, add_data_text)
+                    if self.add_code_data(add_code_text, add_data_text):
+                        self.json_data[now_type][add_code_text] = add_data_text
                 elif not add_code_text:
                     QMessageBox.critical(self, '빈 Meta type', 'Meta code를 입력해 주세요.')
                 elif not add_data_text:
